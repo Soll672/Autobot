@@ -15,23 +15,26 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start(message: types.Message):
     logging.info(message.from_user)
-    await message.answer(f"Привет, {message.from_user.first_name}")
-
-    @dp.message(Command("myinfo"))
-    async def my_info(message: types.Message):
-        user = message.from_user
-        await message.answer(f" id: {user.id}\n Имя: {user.first_name}\n username: {user.username}")
-
-        photos = "Images/1.jpg, Images/2.jpg, Images/3.jpg, Images/4.jpg"
-        photo_paths = photos.split(', ')
-        chosen_photo_path = choice(photo_paths)
-        chosen_photo = types.FSInputFile(chosen_photo_path)
-        await message.answer_photo(chosen_photo)
+    await message.answer(f"привет, {message.from_user.first_name}")
 
 
-        async def echo(message: types.Message):
-            await message.answer("Привет")
-            await message.answer(message.text)
+@dp.message(Command("myinfo"))
+async def my_info(message: types.Message):
+    user = message.from_user
+    await message.answer(f"id: {user.id}\nимя: {user.first_name}\nusername: {user.username}")
+
+    @dp.message(Command("sendphoto"))
+    async def send_photo(message: types.Message):
+        photos = ['Images/1.jpg', 'Images/2.jpg', 'Images/3.jpg', 'Images/4.jpg']
+        chosen_photo_path = choice(photos)
+        chosen_photo = types.InputFile(chosen_photo_path)
+        await bot.send_photo(message.from_user.id, chosen_photo)
+
+
+@dp.message()
+async def echo(message: types.Message):
+    await message.answer("привет")
+    await message.answer(message.text)
 
 
 async def main():
